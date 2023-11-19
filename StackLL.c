@@ -1,55 +1,66 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-typedef struct node{
+typedef struct node {
     int data;
-    struct node* next;
+    struct node *next;
 } node;
 
-node* top = NULL;
+node *top = NULL;
 
-node* push(node* top, int data){
-    node* newnode = malloc(sizeof(node));
+node *push(node **top, int data) {
+    node *newnode = malloc(sizeof(node));
     newnode->data = data;
-    newnode->next = top;
-    top = newnode;
-    return top;
+    newnode->next = *top;
+    *top = newnode;
+    return *top;
 }
 
-void pop(node** top){
-    node* temp = *top;
-    *top = (*top)->next;
-    free(temp);
-}
-
-void peek(){
-    if(top != NULL){
-        printf("The peek element is: %d", top->data);
+node *pop(node **top) {
+    if (*top == NULL) {
+        printf("Stack is Empty\n");
     } else {
-        printf("The stack is empty");
+        node *temp = *top;
+        printf("Popped element is %d\n", (*top)->data);
+        *top = (*top)->next;
+        free(temp);
+    }
+    return *top;
+}
+
+void display(node **top) {
+    if (*top == NULL) {
+        printf("Stack is empty\n");
+    } else {
+        node *ptr = *top;
+        while (ptr != NULL) {
+            printf("%d\t", ptr->data);
+            ptr = ptr->next;
+        }
+        printf("\n");
     }
 }
 
-int main(){
+int main() {
     int i, data;
-    do{
-        printf("1:push\n2:peek\n3:pop\n");
+    do {
+        printf("1: Push\n2: Display\n3: Pop\n4: Exit\n");
         scanf("%d", &i);
 
-        switch(i){
-            case 1: printf("Enter the data to push: ");
+        switch (i) {
+            case 1:
+                printf("Enter the data to push: ");
                 scanf("%d", &data);
-                top = push(top, data);
+                top = push(&top, data);
                 break;
-            case 2: peek();
+            case 2:
+                display(&top);
                 break;
-            case 3: if(top != NULL){
-                    pop(&top);
-                } else {
-                    printf("The stack is empty");
-                }
+            case 3:
+                top = pop(&top);
                 break;
         }
-    } while(i != 4);
+    } while (i != 4);
+
     return 0;
 }
