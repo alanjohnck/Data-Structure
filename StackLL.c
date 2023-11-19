@@ -18,7 +18,7 @@ node *push(node **top, int data) {
 
 node *pop(node **top) {
     if (*top == NULL) {
-        printf("Stack is Empty\n");
+        printf("Stack is empty\n");
     } else {
         node *temp = *top;
         printf("Popped element is %d\n", (*top)->data);
