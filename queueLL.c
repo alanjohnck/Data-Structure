@@ -8,12 +8,11 @@ typedef struct node{
 
 node*  front = NULL, * rear = NULL;
 node * Enqueue(node **rear ,node **front, int data){
-
     node * newnode = malloc(sizeof (node));
     if(*rear==NULL) {
         newnode->data = data;
         newnode->next = NULL;
-        (*front) = newnode;
+        (*front) = newnode;//to get fist node address
         (*rear) = newnode;
     }else {
         newnode->data = data;
@@ -22,7 +21,6 @@ node * Enqueue(node **rear ,node **front, int data){
         (*rear) = (*rear)->next;
     }
     return *rear;
-
 }
 node * Dequeue(node**front){
     if(*front==NULL){
@@ -35,14 +33,15 @@ node * Dequeue(node**front){
     return *front;
 }
 void display(node**front){
-    node *temp = *front;
+    node *temp = *front;//to get front address,taking copy of address otherwise it will leads to change in front pointer address ,the reference will be lost
     if((temp)==NULL){
         printf("Queue is empty");
     }else{
         while((temp)!=NULL){
-            printf("%d\t",temp -> data);
+            printf("%d -> ",temp -> data);
             temp= temp->next;
         }
+        printf("NULL");
     }
 
 
@@ -56,7 +55,7 @@ int main (){
             case 1:
                 printf("Enter the data to Enqueue:");
                 scanf("%d", &data);
-                rear = Enqueue(&rear,&front, data);
+                rear = Enqueue(&rear,&front, data);//should use & otherwise copy will remain and there will no change
                 break;
             case 2:
                 front = Dequeue(&front);
