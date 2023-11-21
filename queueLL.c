@@ -27,7 +27,7 @@ node * Dequeue(node**front){
         printf("Queue is empty");
     }
     node * temp =*front;
-    printf("The deleted element is: %d",temp->data);
+    printf("The deleted element is : %d",temp->data);
     (*front)=(*front)->next;
     free(temp);
     return *front;
