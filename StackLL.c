@@ -46,7 +46,6 @@ int main() {
     do {
         printf("1: Push\n2: Display\n3: Pop\n4: Exit\n");
         scanf("%d", &i);
-
         switch (i) {
             case 1:
                 printf("Enter the data to push: ");

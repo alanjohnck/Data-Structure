@@ -79,7 +79,7 @@ node  * PolyAddition(){
           while(P!=NULL){
               new= malloc(sizeof (node));
               new->coeff=P->coeff;
-              new->expo=new->expo;
+              new->expo=P->expo;
               new->next=NULL;
               if(head==NULL){
                   head=new;
