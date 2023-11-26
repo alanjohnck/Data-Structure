@@ -1,0 +1,39 @@
+SinglyLinkedListNode* mergeLists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+   SinglyLinkedListNode * newhead= NULL;
+   SinglyLinkedListNode * sortptr ;
+   if(head1==NULL){
+       return head2;
+   }
+   if(head2==NULL){
+       return head1;
+   }
+   if(head1&&head2){
+       if(head1->data<=head2->data){
+             sortptr = head1;
+             head1 = sortptr ->next;
+       }
+       else{
+             sortptr = head2;
+             head2= sortptr->next;
+       }
+   }
+   newhead=sortptr;
+   while(head1&&head2){
+       if(head1->data<=head2->data){
+           sortptr -> next =head1;
+           sortptr = head1;
+           head1 = sortptr->next;
+
+       }else{
+           sortptr -> next =head2;
+           sortptr = head2;
+           head2 = sortptr->next;
+
+       }
+   }if(head1==NULL){
+       sortptr->next = head2;
+   }if(head2==NULL){
+       sortptr->next = head1;
+   }
+   return newhead;
+}
