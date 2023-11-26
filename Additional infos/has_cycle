@@ -1,0 +1,29 @@
+
+A linked list is said to contain a cycle if any node is visited more than once while traversing the list. Given a pointer to the head of a linked list, determine if it contains a cycle. If it does, return . Otherwise, return .
+
+Example
+1->2->1 ,returns 1
+1->2->3->2,returns 2
+
+bool has_cycle(SinglyLinkedListNode *head) {
+    if (head == NULL) {
+        // Empty list, so no cycle
+        return false;
+    }
+
+    SinglyLinkedListNode *slow = head;
+    SinglyLinkedListNode *fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+
+        // If there's a cycle, the fast pointer will eventually catch up with the slow pointer
+        if (slow == fast) {
+            return true;
+        }
+    }
+
+    // If we reach here, it means there is no cycle
+    return false;
+}
