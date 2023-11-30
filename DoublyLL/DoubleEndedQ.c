@@ -1,160 +1,139 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Node structure for doubly linked list
-typedef struct Node {
+struct node {
     int data;
-    struct Node* prev;
-    struct Node* next;
-} Node;
+    struct node *prev, *next;
+};
 
-// Deque structure
-typedef struct Deque {
-    Node* front;
-    Node* rear;
-} Deque;
+struct node *head = NULL, *tail = NULL;
 
-// Function to create a new node
-Node* createNode(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    newNode->data = data;
-    newNode->prev = NULL;
-    newNode->next = NULL;
-    return newNode;
+struct node * createNode(int data) {
+    struct node *newnode = (struct node *)malloc(sizeof (struct node));
+    newnode->data = data;
+    newnode->next = newnode->prev = NULL;
+    return (newnode);
 }
 
-// Function to initialize an empty deque
-Deque* initializeDeque() {
-    Deque* deque = (Deque*)malloc(sizeof(Deque));
-    if (deque == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    deque->front = NULL;
-    deque->rear = NULL;
-    return deque;
+/*
+ * create sentinel(dummy head & tail) that
+ * helps us to do insertion and deletion
+ * operation at front and rear so easily.  And
+ * these dummy head and tail wont get deleted
+ * till the end of execution of this program
+ */
+
+void createSentinels() {
+    head = createNode(0);
+    tail = createNode(0);
+    head->next = tail;
+    tail->prev = head;
 }
 
-// Function to check if the deque is empty
-int isDequeEmpty(Deque* deque) {
-    return (deque->front == NULL);
+/* insertion at the front of the queue */
+void enqueueAtFront(int data) {
+    struct node *newnode, *temp;
+    newnode = createNode(data);
+    temp = head->next;
+    head->next = newnode;
+    newnode->prev = head;
+    newnode->next = temp;
+    temp->prev = newnode;
 }
-
-// Function to insert an element at the front of the deque
-void insertFront(Deque* deque, int data) {
-    Node* newNode = createNode(data);
-    if (isDequeEmpty(deque)) {
-        deque->front = deque->rear = newNode;
+/*insertion at the rear of the queue */
+void enqueueAtRear(int data) {
+    struct node *newnode, *temp;
+    newnode = createNode(data);
+    temp = tail->prev;
+    tail->prev = newnode;
+    newnode->next = tail;
+    newnode->prev = temp;
+    temp->next = newnode;
+}
+/* deletion at the front of the queue */
+void dequeueAtFront() {
+    struct node *temp;
+    if (head->next == tail) {
+        printf("Queue is empty\n");
     } else {
-        newNode->next = deque->front;
-        deque->front->prev = newNode;
-        deque->front = newNode;
+        temp = head->next;
+        head->next = temp->next;
+        temp->next->prev = head;
+        free(temp);
     }
+    return;
 }
-
-// Function to insert an element at the rear of the deque
-void insertRear(Deque* deque, int data) {
-    Node* newNode = createNode(data);
-    if (isDequeEmpty(deque)) {
-        deque->front = deque->rear = newNode;
+/* deletion at the rear of the queue */
+void dequeueAtRear()  {
+    struct node *temp;
+    if (tail->prev == head) {
+        printf("Queue is empty\n");
     } else {
-        newNode->prev = deque->rear;
-        deque->rear->next = newNode;
-        deque->rear = newNode;
+        temp = tail->prev;
+        tail->prev = temp->prev;
+        temp->prev->next = tail;
+        free(temp);
     }
+    return;
 }
 
-// Function to delete an element from the front of the deque
-int deleteFront(Deque* deque) {
-    if (isDequeEmpty(deque)) {
-        printf("Deque is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int data = deque->front->data;
-    Node* temp = deque->front;
-
-    if (deque->front == deque->rear) {
-        deque->front = deque->rear = NULL;
-    } else {
-        deque->front = deque->front->next;
-        deque->front->prev = NULL;
-    }
-
-    free(temp);
-    return data;
-}
-
-// Function to delete an element from the rear of the deque
-int deleteRear(Deque* deque) {
-    if (isDequeEmpty(deque)) {
-        printf("Deque is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int data = deque->rear->data;
-    Node* temp = deque->rear;
-
-    if (deque->front == deque->rear) {
-        deque->front = deque->rear = NULL;
-    } else {
-        deque->rear = deque->rear->prev;
-        deque->rear->next = NULL;
-    }
-
-    free(temp);
-    return data;
-}
-
-// Function to display the elements of the deque
-void displayDeque(Deque* deque) {
-    if (isDequeEmpty(deque)) {
-        printf("Deque is empty.\n");
+/* display elements present in the queue */
+void display() {
+    struct node *temp;
+    if (head->next == tail) {
+        printf("Queue is empty\n");
         return;
     }
 
-    Node* current = deque->front;
-    while (current != NULL) {
-        printf("%d\t", current->data);
-        current = current->next;
+    temp = head->next;
+    while (temp != tail) {
+        printf("%-3d", temp->data);
+        temp = temp->next;
     }
     printf("\n");
 }
 
 int main() {
-    Deque* myDeque = initializeDeque();
+    int data, ch;
+    createSentinels();
+    while (1) {
+        printf("1. Enqueue at front\n2. Enqueue at rear\n");
+        printf("3. Dequeue at front\n4. Dequeue at rear\n");
+        printf("5. Display\n6. Exit\n");
+        printf("Enter your choice:");
+        scanf("%d", &ch);
+        switch (ch) {
+            case 1:
+                printf("Enter the data to insert:");
+                scanf("%d", &data);
+                enqueueAtFront(data);
+                break;
 
-    // Insert elements at the front
-    insertFront(myDeque, 1);
-    insertFront(myDeque, 2);
-    insertFront(myDeque, 3);
+            case 2:
+                printf("Enter ur data to insert:");
+                scanf("%d", &data);
+                enqueueAtRear(data);
+                break;
 
-    // Insert elements at the rear
-    insertRear(myDeque, 4);
-    insertRear(myDeque, 5);
+            case 3:
+                dequeueAtFront();
+                break;
 
-    printf("Deque after insertions: ");
-    displayDeque(myDeque);
+            case 4:
+                dequeueAtRear();
+                break;
 
-    // Delete elements from the front and rear
-    int frontElement = deleteFront(myDeque);
-    int rearElement = deleteRear(myDeque);
+            case 5:
+                display();
+                break;
 
-    printf("Deleted front element: %d\n", frontElement);
-    printf("Deleted rear element: %d\n", rearElement);
+            case 6:
+                exit(0);
 
-    printf("Deque after deletions: ");
-    displayDeque(myDeque);
-
-    // Clean up
-    while (!isDequeEmpty(myDeque)) {
-        deleteFront(myDeque);
+            default:
+                printf("Pls. enter correct option\n");
+                break;
+        }
     }
-    free(myDeque);
-
     return 0;
 }
