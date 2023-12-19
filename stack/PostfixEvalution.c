@@ -37,7 +37,7 @@ int is_operator(char symbol)
     return 0;
 }
 
-int evaluate(char* expression)
+int evaluate(char * expression)
 {
     int i = 0;
     char symbol = expression[i];

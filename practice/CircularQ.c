@@ -47,7 +47,7 @@ int main(){
         switch(choice){
             case 1:printf("Enter the item:");
                 scanf("%d",&item);
-                Enqueue(item);
+               Enqueue(item);
                 break;
             case 2:Deqeue();
                 break;

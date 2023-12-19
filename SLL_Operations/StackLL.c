@@ -3,7 +3,7 @@
 
 typedef struct node {
     int data;
-    struct node *next;
+    struct node * ppnext;
 } node;
 
 node *top = NULL;
@@ -29,10 +29,12 @@ node *pop(node **top) {
 }
 
 void display(node **top) {
+
     if (*top == NULL) {
         printf("Stack is empty\n");
     } else {
         node *ptr = *top;
+        printf("The elements in the stack\n");
         while (ptr != NULL) {
             printf("%d\t", ptr->data);
             ptr = ptr->next;
@@ -45,6 +47,7 @@ int main() {
     int i, data;
     do {
         printf("1: Push\n2: Display\n3: Pop\n4: Exit\n");
+        printf("Enter the operation\n");
         scanf("%d", &i);
         switch (i) {
             case 1:

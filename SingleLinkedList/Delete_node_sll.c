@@ -71,12 +71,10 @@ int main() {
         printf("%d ", current->data);
         current = current->next;
     }
-
     printf("\nEnter the node to delete: ");
     head=temp;
     scanf("%d", &search);
     head = Delete(head, search);  // Update the head after deletion
-
     // Print the updated list
     printf("The updated list of numbers: ");
     node*updated = head;  // Use the updated head
@@ -84,6 +82,5 @@ int main() {
         printf("%d ", updated->data);
         updated = updated->next;
     }
-
     return 0;
 }

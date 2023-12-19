@@ -1,7 +1,9 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <stdbool.h>
+#include <string.h>
+
 #define MAX 10
 
 int top = -1;
@@ -19,7 +21,7 @@ void push(char data) {
 char pop() {
     char del;
     if (top == -1) {
-         printf("stack is empty\n");
+        printf("stack is empty\n");
         return '\0'; // Return a default value, since the stack is empty
     } else {
         del = stack[top];
@@ -52,10 +54,32 @@ int precedence(char ch) {
     return -1;
 }
 
-void toPostfix(char * expression) {
+void reverseString(char* str) {
+    int length = strlen(str);
+    int i, j;
+    char temp;
+
+    for (i = 0, j = length - 1; i < j; i++, j--) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+
+void infixToPrefix(char* expression) {
+    reverseString(expression);
+
+    for (int i = 0; expression[i] != '\0'; i++) {
+        if (expression[i] == '(') {
+            expression[i] = ')';
+        } else if (expression[i] == ')') {
+            expression[i] = '(';
+        }
+    }
+
     push('#');
-    for (int i =  0 ; expression [i] != '\0' ; i++) {
-        char item = expression [i];
+    for (int i = 0; expression[i] != '\0'; i++) {
+        char item = expression[i];
         if (isOperand(item)) {
             output(item);
         } else if (item == '(') {
@@ -64,7 +88,7 @@ void toPostfix(char * expression) {
             while (stack[top] != '(') {
                 output(pop());
             }
-            pop();
+            pop(); // Pop the '('
         } else {
             while (precedence(stack[top]) >= precedence(item)) {
                 output(pop());
@@ -80,9 +104,9 @@ void toPostfix(char * expression) {
 
 int main() {
     char str[20];
-    printf("Enter the expression\n");
+    printf("Enter the infix expression\n");
     scanf("%s", str);
-    printf("postfix expression\n");
-    toPostfix(str);
+    printf("Prefix expression\n");
+    infixToPrefix(str);
     return 0;
 }

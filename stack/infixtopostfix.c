@@ -14,11 +14,6 @@ int isOperand(char ch)
            (ch >= 'a' && ch <= 'z') ||
            (ch >= 'A' && ch <= 'Z');
 }
-
-// A utility function to return
-// precedence of a given operator
-// Higher returned value means
-// higher precedence
 int Prec(char ch)
 {
     switch (ch)

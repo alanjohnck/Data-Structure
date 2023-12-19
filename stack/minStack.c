@@ -1,12 +1,10 @@
 #include<stdio.h>
 #define MAX 10
 int top=-1,stack[MAX],mintop=-1,minStack[MAX];
-
 void push(int data){
     if(top==MAX-1){
         printf("STACK OVERFLOW");
     }
-
     else{
         top=top+1;
         stack[top]=data;

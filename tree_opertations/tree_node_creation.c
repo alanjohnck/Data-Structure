@@ -1,14 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
-
 typedef struct treenode{
     int data;
     struct treenode * left;
     struct treenode * right;
 }treenode;
-
 treenode * create_treenode(int data){
-
     treenode * result = malloc(sizeof (treenode));
     if(result!=NULL){
         result->left=NULL;
@@ -31,7 +28,6 @@ void postorder(treenode * root){
     if(root==NULL){
         return ;
     }
-
     postorder(root->left);
     postorder(root->right);
     printf("%d\t",root->data);
@@ -45,16 +41,16 @@ void inorder(treenode * root){
     printf("%d\t",root->data);
     inorder(root->right);
 }
-
 int main(){
-
     treenode * n1=create_treenode(10);
     treenode * n2=create_treenode(11);
     treenode * n3=create_treenode(12);
     n1->left=n2;
     n1->right=n3;
+    printf("\npostorder traversal\n");
     postorder(n1);
-
-
-
+    printf("\ninorder traversal\n");
+    inorder(n1);
+    printf("\npreorder traversal\n");
+    preorder(n1);
 }

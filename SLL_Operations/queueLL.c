@@ -6,22 +6,37 @@ typedef struct node{
     struct node* next;
 }node;
 
+typedef struct stack{
+    int data;
+   struct stack * next;
+}stack;
+
+stack * top = NULL;
+
 node*  front = NULL, * rear = NULL;
-node * Enqueue(node **rear ,node **front, int data){
+
+node * Enqueue(node **rear ,node **front,stack **top, int data)
+{
     node * newnode = malloc(sizeof (node));
+
+
     if(*rear==NULL) {
+
         newnode->data = data;
         newnode->next = NULL;
+        *top = newnode;
         (*front) = newnode;//to get fist node address
         (*rear) = newnode;
     }else {
         newnode->data = data;
         newnode->next =NULL;
+
         (*rear)->next = newnode;
         (*rear) = (*rear)->next;
     }
     return *rear;
 }
+
 node * Dequeue(node**front){
     if(*front==NULL){
         printf("Queue is empty");
@@ -46,22 +61,33 @@ void display(node**front){
 
 
 }
+void StackDisplay(stack **top){
+    stack * ptr = *top;
+    while (ptr!=NULL){
+        printf("%d\t",ptr->data);
+        ptr=ptr->next;
+    }
+
+}
 int main (){
     int data, i;
     do {
-        printf("\n1.Enqueue\n2.Dequeue\n3.display\n");
+        printf("\n1.Enqueue\n2.Dequeue\n3.display\n4.reverse");
         scanf("%d", &i);
         switch(i){
             case 1:
                 printf("Enter the data to Enqueue:");
                 scanf("%d", &data);
-                rear = Enqueue(&rear,&front, data);//should use & otherwise copy will remain and there will no change
+                rear = Enqueue(&rear,&front,&top, data);//should use & otherwise copy will remain and there will no change
                 break;
             case 2:
                 front = Dequeue(&front);
                 break;
             case 3:
                  display(&front);
+                break;
+            case 4:
+                StackDisplay(&top);
                 break;
         }
     } while (i != 10);

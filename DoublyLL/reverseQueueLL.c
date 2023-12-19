@@ -1,165 +1,130 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-// Node structure for singly linked list
-typedef struct Node {
+// Node structure for the linked list
+struct Node {
     int data;
     struct Node* next;
-} Node;
+};
 
-// Queue structure
-typedef struct Queue {
-    Node* front;
-    Node* rear;
-} Queue;
+// Structure for the queue
+struct Queue {
+    struct Node* front;
+    struct Node* rear;
+};
 
-// Stack structure using singly linked list
-typedef struct Stack {
-    Node* top;
-} Stack;
+// Structure for the stack
+struct Stack {
+    struct Node* top;
+};
 
-// Function to initialize a new node
-Node* createNode(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->next = NULL;
     return newNode;
 }
 
-// Function to initialize an empty queue
-Queue* initializeQueue() {
-    Queue* queue = (Queue*)malloc(sizeof(Queue));
-    if (queue == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    queue->front = queue->rear = NULL;
-    return queue;
+// Function to initialize a queue
+void initializeQueue(struct Queue* queue) {
+    queue->front = NULL;
+    queue->rear = NULL;
 }
 
-// Function to initialize an empty stack
-Stack* initializeStack() {
-    Stack* stack = (Stack*)malloc(sizeof(Stack));
-    if (stack == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
+// Function to initialize a stack
+void initializeStack(struct Stack* stack) {
     stack->top = NULL;
-    return stack;
 }
 
 // Function to check if the queue is empty
-int isQueueEmpty(Queue* queue) {
+int isQueueEmpty(struct Queue* queue) {
     return (queue->front == NULL);
 }
 
 // Function to enqueue an element into the queue
-void enqueue(Queue* queue, int data) {
-    Node* newNode = createNode(data);
+void enqueue(struct Queue* queue, struct Stack* stack, int data) {
+    // Create a new node
+    struct Node* newNode = createNode(data);
+
+    // If the queue is empty, set the front and rear to the new node
     if (isQueueEmpty(queue)) {
-        queue->front = queue->rear = newNode;
+        queue->front = newNode;
+        queue->rear = newNode;
     } else {
+        // Otherwise, add the new node to the rear of the queue
         queue->rear->next = newNode;
         queue->rear = newNode;
     }
-}
 
-// Function to dequeue an element from the queue
-int dequeue(Queue* queue) {
-    if (isQueueEmpty(queue)) {
-        printf("Queue is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int data = queue->front->data;
-    Node* temp = queue->front;
-
-    if (queue->front == queue->rear) {
-        queue->front = queue->rear = NULL;
-    } else {
-        queue->front = queue->front->next;
-    }
-
-    free(temp);
-    return data;
-}
-
-// Function to push an element onto the stack
-void push(Stack* stack, int data) {
-    Node* newNode = createNode(data);
+    // Push the element onto the stack
     newNode->next = stack->top;
     stack->top = newNode;
 }
 
-// Function to pop an element from the stack
-int pop(Stack* stack) {
-    if (stack->top == NULL) {
-        printf("Stack is empty.\n");
-        exit(EXIT_FAILURE);
+// Function to dequeue an element from the queue
+int dequeue(struct Queue* queue, struct Stack* stack) {
+    if (isQueueEmpty(queue)) {
+        printf("Queue is empty\n");
+        return -1;
     }
 
-    int data = stack->top->data;
-    Node* temp = stack->top;
-    stack->top = stack->top->next;
-    free(temp);
-    return data;
-}
+    // Pop the element from the stack
+    struct Node* poppedNode = stack->top;
+    stack->top = poppedNode->next;
 
-// Function to reverse the content of a queue using a stack
-void reverseQueue(Queue* queue) {
-    Stack* stack = initializeStack();
+    int dequeuedValue = poppedNode->data;
 
-    // Enqueue all elements into the stack
-    while (!isQueueEmpty(queue)) {
-        push(stack, dequeue(queue));
+    // Remove the front element from the queue
+    struct Node* frontNode = queue->front;
+    queue->front = frontNode->next;
+
+    // If the queue becomes empty, update the rear to NULL
+    if (queue->front == NULL) {
+        queue->rear = NULL;
     }
 
-    // Enqueue all elements back into the queue
-    while (stack->top != NULL) {
-        enqueue(queue, pop(stack));
-    }
+    // Free the memory of the dequeued node
+    free(frontNode);
 
-    free(stack);
-}
-
-// Function to display the elements of a queue
-void displayQueue(Queue* queue) {
-    Node* current = queue->front;
+    // Display the stack after dequeue operation
+    printf("Stack after dequeue: ");
+    struct Node* current = stack->top;
     while (current != NULL) {
-        printf("%d\t", current->data);
+        printf("%d ", current->data);
         current = current->next;
     }
     printf("\n");
+
+    return dequeuedValue;
 }
 
 int main() {
-    Queue* myQueue = initializeQueue();
+    struct Queue queue;
+    struct Stack stack;
+    initializeQueue(&queue);
+    initializeStack(&stack);
 
-    // Enqueue elements into the queue
-    enqueue(myQueue, 1);
-    enqueue(myQueue, 2);
-    enqueue(myQueue, 3);
-    enqueue(myQueue, 4);
-    enqueue(myQueue, 5);
+    // Enqueue elements into the queue and store them in the stack
+    enqueue(&queue, &stack, 1);
+    enqueue(&queue, &stack, 2);
+    enqueue(&queue, &stack, 3);
 
-    printf("Original Queue: ");
-    displayQueue(myQueue);
-
-    // Reverse the content of the queue
-    reverseQueue(myQueue);
-
-    printf("Reversed Queue: ");
-    displayQueue(myQueue);
-
-    // Clean up
-    while (!isQueueEmpty(myQueue)) {
-        dequeue(myQueue);
+    // Display the stack after enqueue operations
+    printf("Stack after enqueue: ");
+    struct Node* current = stack.top;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
     }
-    free(myQueue);
+    printf("\n");
+
+    // Dequeue an element and display the stack
+    int dequeuedValue = dequeue(&queue, &stack);
+    printf("Dequeued value: %d\n", dequeuedValue);
+
+    // Dequeue another element and display the stack
+    dequeue(&queue, &stack);
 
     return 0;
 }

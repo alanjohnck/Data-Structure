@@ -2,8 +2,10 @@
 #include<stdbool.h>
 #include <ctype.h>
 #define MAX 10
+
 int stack[MAX];
 int top =- 1;
+
 void push(int data)
 {
     if(top==MAX-1){
@@ -12,6 +14,7 @@ void push(int data)
         stack[++top] = data;
     }
 }
+
 int pop(){
     int del;
     if(top==-1){
